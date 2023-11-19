@@ -9,14 +9,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "quiz")
-public class Quiz {
+@Table(name = "raw_surveys")
+public class Survey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long business_id;
     @Lob
-    private String jsonQuiz;
+    private String jsonSurvey;
     private Integer amount;
     private Integer count;
     @Lob
