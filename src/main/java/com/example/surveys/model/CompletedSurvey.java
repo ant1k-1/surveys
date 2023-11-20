@@ -1,21 +1,29 @@
 package com.example.surveys.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "completed_surveys")
 public class CompletedSurvey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String uuid;
-    @Lob
-    private String filledJsonSurvey;
-    private Integer status; //idk what will be there
+    private Long id; // идентификация опроса
+
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String uuid; //идентификация юзера
+    private Integer status; //статус
+
+    @OneToMany(mappedBy = "completedSurvey")
+    private Collection<Answer> answers = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "raw_survey_id", nullable = false)
+    private Survey survey;
 }

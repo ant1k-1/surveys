@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -14,11 +17,17 @@ public class Survey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long business_id;
-    @Lob
-    private String jsonSurvey;
+    private Long businessId;
+
+    @OneToMany(mappedBy = "survey")
+    private Collection<Question> questions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "survey")
+    private Collection<CompletedSurvey> completedSurveys = new ArrayList<>();
+
     private Integer amount;
     private Integer count;
-    @Lob
-    private String jsonStat;
+    // TODO: Добавить статистику
+//    @Lob
+//    private String jsonStat;
 }

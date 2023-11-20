@@ -1,5 +1,6 @@
 package com.example.surveys.model;
 
+import com.example.surveys.dto.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -7,16 +7,11 @@
     <title>Sign-up</title>
 </head>
 <body>
-    <div th:insert="~{parts/navbar :: navbar-copy}"></div>
-    <div class="container mt-5 p-2">
-        <!--    Приветствие-->
-        <div sec:authorize="isAuthenticated()" th:insert="~{parts/balance :: welcome-balance-line}"></div>
-        <div class="card card-body mb-5">
-
-        </div>
-    </div>
-
-
+<div th:insert="~{parts/navbar :: navbar-copy}"></div>
+<div class="container mx-auto p-2">
+    <p class="my-5">404 страница не найдена</p>
+    <a class="nav-link btn btn-sm btn-outline-light" aria-current="page" href="/home">Главная</a>
+</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

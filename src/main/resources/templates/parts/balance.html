@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="welcome-balance-line">
+    <div class="d-flex justify-content-between mt-3">
+        <h3 th:text="'Добро пожаловать, ' + ${user.name()} + '!'"></h3>
+        <div class="d-flex">
+            <div class="me-2 flex-fill mt-2">
+                <p th:text="'Ваш баланс: ' + ${user.balance()}"></p>
+            </div>
+            <div class="flex-fill">
+                <button sec:authorize="hasAuthority('ROLE_USER')" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWithdraw" aria-expanded="false" aria-controls="collapseExample">
+                    Вывести
+                </button>
+                <button sec:authorize="hasAuthority('ROLE_BUSINESS')" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWithdraw" aria-expanded="false" aria-controls="collapseExample">
+                    Пополнить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
