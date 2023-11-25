@@ -29,5 +29,5 @@ public class HomeController {
         return "home";
     }
 
-    //TODO: Начать дрочку с опросами
+    //TODO: Продолжить дрочку с опросами
 }
