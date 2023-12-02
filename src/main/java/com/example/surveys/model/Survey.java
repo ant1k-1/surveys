@@ -27,7 +27,5 @@ public class Survey {
 
     private Integer amount;
     private Integer count;
-    // TODO: Добавить статистику
-//    @Lob
-//    private String jsonStat;
+    private Integer award;
 }

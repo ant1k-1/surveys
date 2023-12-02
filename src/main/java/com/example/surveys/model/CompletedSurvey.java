@@ -13,11 +13,8 @@ import java.util.Collection;
 @Table(name = "completed_surveys")
 public class CompletedSurvey {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // идентификация опроса
-
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String uuid; //идентификация юзера
+    private String uuid; //id of completed survey unit
     private Integer status; //статус
 
     @OneToMany(mappedBy = "completedSurvey")
@@ -26,4 +23,8 @@ public class CompletedSurvey {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "raw_survey_id", nullable = false)
     private Survey survey;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

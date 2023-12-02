@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CompletedSurveyRepository extends JpaRepository<CompletedSurvey, Long> {
-    Optional<CompletedSurvey> findById(Long id);
+public interface CompletedSurveyRepository extends JpaRepository<CompletedSurvey, String> {
     Optional<CompletedSurvey> findByUuid(String uuid);
     List<CompletedSurvey> findBySurvey(Survey survey);
 }

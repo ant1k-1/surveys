@@ -12,6 +12,18 @@
         <!--    Приветствие-->
         <div sec:authorize="isAuthenticated()" th:insert="~{parts/balance :: welcome-balance-line}"></div>
         <div class="card card-body mb-5">
+            <h5 class="card-title">Доступные опросы</h5>
+            <div th:if="${surveys.isEmpty()}">
+                <p>Пока ничего нет, заглядывайте позже.</p>
+            </div>
+            <div th:if="${!surveys.isEmpty()}">
+                <div class="card card-body m-3" th:each="survey : ${surveys}">
+                    <div class="d-flex">
+                        <p th:text="Опрос ${survey.getId()}"></p>
+                        <a href="#" class="btn btn-primary ms-auto">Пройти</a>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>

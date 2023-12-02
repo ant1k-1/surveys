@@ -40,6 +40,9 @@ public class User {
     @CollectionTable(name = "user_quiz", joinColumns = @JoinColumn(name = "user_id"))
     private Map<String, Integer> quiz = new HashMap<>();
 
+    @OneToMany(mappedBy = "user")
+    private Collection<CompletedSurvey> completedSurveys = new ArrayList<>();
+    // string - uuid, int - award
     public User(
             String email,
             String login,

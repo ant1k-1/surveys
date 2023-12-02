@@ -1,5 +1,7 @@
 package com.example.surveys.controller;
 
+import com.example.surveys.model.Survey;
+import com.example.surveys.service.SurveyService;
 import com.example.surveys.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -8,13 +10,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Controller
 public class HomeController {
     private final UserService userService;
+    private final SurveyService surveyService;
 
     @Autowired
-    public HomeController(UserService userService) {
+    public HomeController(UserService userService, SurveyService surveyService) {
         this.userService = userService;
+        this.surveyService = surveyService;
     }
 
 
@@ -25,9 +31,13 @@ public class HomeController {
     ) {
         if (auth.isAuthenticated()) {
             model.addAttribute("user", userService.getUserDTO(auth.getName()));
+            List<Survey> availableSurveys = surveyService.getAvailableSurveys(auth.getName());
+            model.addAttribute("surveys", availableSurveys);
         }
         return "home";
     }
+
+
 
     //TODO: Продолжить дрочку с опросами
 }
