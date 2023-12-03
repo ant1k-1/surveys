@@ -37,4 +37,18 @@ public class Question {
 
     @OneToMany(mappedBy = "question")
     private Collection<Answer> answers = new ArrayList<>();
+
+    public Question(
+            List<String> pics,
+            Survey survey,
+            String description,
+            AnswerType answerType,
+            List<String> variants
+    ) {
+        this.pics = pics;
+        this.survey = survey;
+        this.description = description;
+        this.answerType = answerType;
+        this.variants = variants;
+    }
 }

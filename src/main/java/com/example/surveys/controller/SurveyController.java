@@ -2,17 +2,15 @@ package com.example.surveys.controller;
 
 import com.example.surveys.service.SurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @RequestMapping("/survey")
@@ -34,6 +32,8 @@ public class SurveyController {
             @CurrentSecurityContext(expression = "authentication") Authentication auth,
             Model model
     ) {
+        //TODO: сделать отображение опроса.
+        //TODO: Сначала идет запрос на /id, там создается completedSurvey с uuid, redirect:/uuid
         return "survey";
     }
 
@@ -41,11 +41,26 @@ public class SurveyController {
     @GetMapping("/create")
     public String createSurvey(
             @CurrentSecurityContext(expression = "authentication") Authentication auth,
-            Model model,
-            @RequestParam Map<String, String> map
+            Model model
     ) {
-        model.addAttribute("business_action", "creation");
-        return "survey";
+        return "createSurvey";
+    }
+
+    @PreAuthorize("hasRole('ROLE_BUSINESS')")
+    @PostMapping("/create")
+    public String createSurvey(
+            @CurrentSecurityContext(expression = "authentication") Authentication auth,
+            Model model,
+            @RequestParam Map<String, String> map,
+            @RequestParam("pics") MultipartFile[] pics
+            ) {
+        for (var key : map.keySet()) {
+            System.out.println(key + '=' + map.get(key));
+        }
+        System.out.println(Arrays.toString(pics));
+        //TODO:обработать данные и создать опрос
+
+        return "redirect:/create";
     }
 
     @PreAuthorize("hasRole('ROLE_BUSINESS')")
@@ -55,7 +70,7 @@ public class SurveyController {
             Model model,
             @PathVariable String id
     ) {
-        model.addAttribute("business_action", "view");
+
         return "survey";
     }
 

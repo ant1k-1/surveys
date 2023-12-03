@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SurveyService {
@@ -27,5 +28,9 @@ public class SurveyService {
                 .stream().map(CompletedSurvey::getSurvey).toList();
         return surveyRepository.findAll().stream()
                 .filter(survey -> !surveysByUser.contains(survey)).toList();
+    }
+
+    public Boolean createSurvey() {
+        return true;
     }
 }

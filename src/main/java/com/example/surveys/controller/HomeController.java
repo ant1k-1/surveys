@@ -30,6 +30,7 @@ public class HomeController {
             Model model
     ) {
         if (auth.isAuthenticated()) {
+            //TODO: тут баг, надо сделать прогрузку доступных опросов по кнопке, иначе они грузят раньше, чем пользователь авторизуется
             model.addAttribute("user", userService.getUserDTO(auth.getName()));
             List<Survey> availableSurveys = surveyService.getAvailableSurveys(auth.getName());
             model.addAttribute("surveys", availableSurveys);
