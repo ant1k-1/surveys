@@ -28,4 +28,8 @@ public class Survey {
     private Integer amount;
     private Integer count;
     private Integer award;
+
+    public void addQuestion(Question question) {
+        questions.add(question);
+    }
 }

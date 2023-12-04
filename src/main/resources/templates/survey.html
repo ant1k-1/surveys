@@ -5,19 +5,76 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <title>Sign-up</title>
+    <style>
+        /* Дополнительные стили для изображений */
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .card-img-top {
+            flex: 1;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
 <div th:insert="~{parts/navbar :: navbar-copy}"></div>
 <div class="container mt-5 p-2">
-    <div sec:authorize="isAuthenticated()" class="card card-body mb-5">
+    <div sec:authorize="isAuthenticated()" class="">
         <div sec:authorize="hasRole('ROLE_BUSINESS')">
+            <div th:if="${survey != null}">
+                <div class="card card-body mb-3 mt-3">
+                    <h4 class="card-title mb-3" th:text="'Опрос №' + ${survey.id()}"></h4>
+                    <div class="card card-body mb-3 mx-5 px-5 pt-3" th:each="question, iter : ${survey.questions()}">
+                        <h5 class="card-title mb-3" th:text="'Вопрос ' + ${iter.count}"></h5>
+                        <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
+                            <!-- Итерация по массиву изображений -->
+                            <div th:each="obj, iterStat : ${question.images()}" class="col">
+                                <div class="card h-100">
+                                    <!-- Пути к изображениям должны быть указаны в модели данных -->
+                                    <img th:src="'/img/'+${obj}" class="card-img-top" alt="Image">
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-text mt-3 mx-1" th:text="${question.description()}"></p>
+                        <div th:if="${question.answerType().toString().equals('TEXT_ANSWER')}">
+                            <input type="text" class="form-control mt-3">
+                        </div>
+                        <div th:if="${question.answerType().toString().equals('NUMERIC_ANSWER')}">
+                            <input type="number" class="form-control mt-3">
+                        </div>
+                        <div th:if="${question.answerType().toString().equals('DATE_ANSWER')}">
+                            <input type="date" class="form-control mt-3">
+                        </div>
+                        <div th:if="${question.answerType().toString().equals('CHECKBOX_ANSWER')}">
+                            <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
+                                <div th:each="obj, iterStat : ${question.variants()}" class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" th:id="${'checkbox' + iterStat.count}" disabled>
+                                        <label th:text="${obj}" class="form-check-label" th:for="${'checkbox' + iterStat.count}">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
 
-            <div th:if="${business_action?.equals('creation')}">
-
+                        </div>
+                        <div th:if="${question.answerType().toString().equals('RATIO_ANSWER')}">
+                            <div th:each="obj, iterStat : ${question.variants()}" class="col">
+                                <div class="card">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" th:id="${'ratio' + iter.count}" disabled>
+                                        <label th:text="${obj}" class="form-check-label" th:for="${'ratio' + iterStat.count}">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div th:if="${business_action?.equals('view')}">
-
+            <div th:if="${survey == null}" class="card card-body mb-3">
+                Упс, что-то пошло не так. Похоже, опрос не найден.
             </div>
         </div>
 
@@ -27,7 +84,7 @@
     </div>
 
     <div sec:authorize="!isAuthenticated()" class="card card-body mb-5">
-        Упс, что-то пошло не так. Похоже, вы не авторизованы
+        Упс, что-то пошло не так. Похоже, вы не авторизованы.
     </div>
 
 </div>

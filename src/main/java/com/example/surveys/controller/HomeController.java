@@ -33,6 +33,11 @@ public class HomeController {
             //TODO: тут баг, надо сделать прогрузку доступных опросов по кнопке, иначе они грузят раньше, чем пользователь авторизуется
             model.addAttribute("user", userService.getUserDTO(auth.getName()));
             List<Survey> availableSurveys = surveyService.getAvailableSurveys(auth.getName());
+            System.out.println(availableSurveys.size());
+            for (var s :
+                    availableSurveys) {
+                System.out.println(s.getId());
+            }
             model.addAttribute("surveys", availableSurveys);
         }
         return "home";

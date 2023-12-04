@@ -19,7 +19,7 @@
             <div th:if="${!surveys.isEmpty()}">
                 <div class="card card-body m-3" th:each="survey : ${surveys}">
                     <div class="d-flex">
-                        <p th:text="Опрос ${survey.getId()}"></p>
+                        <p th:text="'Опрос №' + ${survey.getId()}"></p>
                         <a href="#" class="btn btn-primary ms-auto">Пройти</a>
                     </div>
                 </div>
