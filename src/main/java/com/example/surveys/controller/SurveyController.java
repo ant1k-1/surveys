@@ -39,13 +39,22 @@ public class SurveyController {
         return "survey";
     }
 
-    @GetMapping("/{uuid}")
+    @GetMapping("/{id}")
     public String getSurvey(
             @CurrentSecurityContext(expression = "authentication") Authentication auth,
-            Model model
-    ) {
+            Model model,
+            @PathVariable String id) {
         //TODO: сделать отображение опроса.
         //TODO: Сначала идет запрос на /id, там создается completedSurvey с uuid, redirect:/uuid
+        return "redirect:/survey/" + uuid;
+    }
+
+    @GetMapping("/uuid")
+    public String startSurvey(
+            @CurrentSecurityContext(expression = "authentication") Authentication auth,
+            Model model,
+            @PathVariable String uuid
+    ) {
         return "survey";
     }
 
@@ -67,6 +76,9 @@ public class SurveyController {
             @RequestParam Map<String, String> map,
             @RequestParam(name = "pics", required = false) MultipartFile[] pics
             ) {
+//        for (var key : map.keySet()) {
+//            System.out.println(key + "=" + map.get(key));
+//        }
         int survey_id = Math.toIntExact(surveyService.createSurvey(map, pics, auth.getName()));
         System.out.println("Survey creation status: " + survey_id);
         if (survey_id > 0) {
@@ -78,7 +90,7 @@ public class SurveyController {
     }
 
     @PreAuthorize("hasRole('ROLE_BUSINESS')")
-    @GetMapping("/view/{id}")
+    @GetMapping("/view/id/{id}")
     public String viewSurvey(
             @CurrentSecurityContext(expression = "authentication") Authentication auth,
             Model model,
@@ -86,9 +98,16 @@ public class SurveyController {
     ) {
         SurveyDTO surveyDTO = surveyService.getSurveyDtoById(Long.valueOf(id));
         model.addAttribute("survey", surveyDTO);
-        //TODO: добавить просмотр опроса
         return "survey";
     }
 
+    @GetMapping("/view/uuid/{uuid}")
+    public String viewCompletedSurvey(
+            @CurrentSecurityContext(expression = "authentication") Authentication auth,
+            Model model,
+            @PathVariable String uuid
+    ) {
+
+    }
 
 }

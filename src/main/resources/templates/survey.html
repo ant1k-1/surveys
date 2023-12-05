@@ -18,7 +18,7 @@
         }
     </style>
 </head>
-<body>
+<body style="background-color: aliceblue">
 <div th:insert="~{parts/navbar :: navbar-copy}"></div>
 <div class="container mt-5 p-2">
     <div sec:authorize="isAuthenticated()" class="">
@@ -26,20 +26,23 @@
             <div th:if="${survey != null}">
                 <div class="card card-body mb-3 mt-3">
                     <h4 class="card-title mb-3" th:text="'Опрос №' + ${survey.id()}"></h4>
-                    <div class="card card-body mb-3 mx-5 px-5 pt-3" th:each="question, iter : ${survey.questions()}">
+                    <div style="background-color: #eefcff" class="card card-body mt-2 mb-3 mx-4 px-5 pt-3" th:each="question, iter : ${survey.questions()}">
                         <h5 class="card-title mb-3" th:text="'Вопрос ' + ${iter.count}"></h5>
                         <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
                             <!-- Итерация по массиву изображений -->
                             <div th:each="obj, iterStat : ${question.images()}" class="col">
-                                <div class="card h-100">
+                                <div class="card h-100 position-relative">
                                     <!-- Пути к изображениям должны быть указаны в модели данных -->
                                     <img th:src="'/img/'+${obj}" class="card-img-top" alt="Image">
+                                    <div class="d-flex card align-items-center justify-content-center position-absolute top-0 start-0 bg-primary text-white circle p-2" style="width: 2rem; height: 2rem">
+                                        <span style="" th:text="${iterStat.count}" class="fw-bold"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <p class="card-text mt-3 mx-1" th:text="${question.description()}"></p>
                         <div th:if="${question.answerType().toString().equals('TEXT_ANSWER')}">
-                            <input type="text" class="form-control mt-3">
+                            <textarea class="form-control mt-3" rows="4"></textarea>
                         </div>
                         <div th:if="${question.answerType().toString().equals('NUMERIC_ANSWER')}">
                             <input type="number" class="form-control mt-3">
@@ -50,9 +53,9 @@
                         <div th:if="${question.answerType().toString().equals('CHECKBOX_ANSWER')}">
                             <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
                                 <div th:each="obj, iterStat : ${question.variants()}" class="col">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" th:id="${'checkbox' + iterStat.count}" disabled>
-                                        <label th:text="${obj}" class="form-check-label" th:for="${'checkbox' + iterStat.count}">
+                                    <div class="form-check mx-3">
+                                        <input class="form-check-input" type="checkbox" value="" th:id="${iter.count + 'checkbox' + iterStat.count}">
+                                        <label th:text="${obj}" class="form-check-label" th:for="${iter.count +'checkbox' + iterStat.count}">
                                         </label>
                                     </div>
                                 </div>
@@ -60,11 +63,11 @@
 
                         </div>
                         <div th:if="${question.answerType().toString().equals('RATIO_ANSWER')}">
-                            <div th:each="obj, iterStat : ${question.variants()}" class="col">
-                                <div class="card">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" th:id="${'ratio' + iter.count}" disabled>
-                                        <label th:text="${obj}" class="form-check-label" th:for="${'ratio' + iterStat.count}">
+                            <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
+                                <div th:each="obj, iterStat : ${question.variants()}" class="col">
+                                    <div class="form-check mx-3">
+                                        <input class="form-check-input" type="radio" value="" th:id="${iter.count +'ratio' + iterStat.count}" th:name="${'ratio' + iter.count}">
+                                        <label th:text="${obj}" class="form-check-label" th:for="${iter.count +'ratio' + iterStat.count}">
                                         </label>
                                     </div>
                                 </div>

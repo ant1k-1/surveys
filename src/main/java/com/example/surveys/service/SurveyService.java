@@ -83,7 +83,6 @@ public class SurveyService {
         } catch (NoSuchElementException e) {
             return -1L;
         }
-        List<MultipartFile> arrayListPics = new ArrayList<>(Arrays.asList(pics));
         int question_count = Integer.parseInt(form.get("question_count"));
         int amount = Integer.parseInt(form.get("amount"));
         int award = Integer.parseInt(form.get("award"));
@@ -100,8 +99,19 @@ public class SurveyService {
         for (int i = 1; i < question_count + 1; i++) {
             String prefix_q = "q" + i + "-";
             // parsing question params
-            int picsCount = Integer.parseInt(form.getOrDefault(prefix_q + "picsCount", "0"));
-            int variantsCount = Integer.parseInt(form.get(prefix_q + "variantsCount"));
+            int picsCount;
+            int variantsCount;
+            try {
+                picsCount = Integer.parseInt(form.getOrDefault(prefix_q + "picsCount", "0"));
+            } catch (NumberFormatException e) {
+                picsCount = 0;
+            }
+            try {
+                variantsCount = Integer.parseInt(form.get(prefix_q + "variantsCount"));
+            } catch (NumberFormatException e) {
+                variantsCount = 0;
+            }
+            List<MultipartFile> arrayListPics = picsCount == 0 ? null : new ArrayList<>(Arrays.asList(pics));
             String description = form.getOrDefault(prefix_q + "description", "");
             AnswerType answerType = AnswerType.valueOf(
                     form.getOrDefault(prefix_q + "answerType", "TEXT_ANSWER"));
@@ -115,9 +125,14 @@ public class SurveyService {
             List<String> variants = new ArrayList<>();
             switch (answerType) {
                 case DATE_ANSWER, TEXT_ANSWER, NUMERIC_ANSWER -> {}
-                case RATIO_ANSWER, CHECKBOX_ANSWER -> {
+                case CHECKBOX_ANSWER -> {
                     for (int k = 0; k < variantsCount; k++) {
                         variants.add(form.get(prefix_q + "checkbox" + k));
+                    }
+                }
+                case RATIO_ANSWER -> {
+                    for (int k = 0; k < variantsCount; k++) {
+                        variants.add(form.get(prefix_q + "ratio" + k));
                     }
                 }
             }
