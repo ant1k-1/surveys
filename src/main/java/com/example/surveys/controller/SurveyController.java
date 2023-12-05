@@ -2,8 +2,7 @@ package com.example.surveys.controller;
 
 import com.example.surveys.dto.SurveyDTO;
 import com.example.surveys.model.Question;
-import com.example.surveys.model.Survey;
-import com.example.surveys.repository.QuestionRepository;
+import com.example.surveys.service.CompletedSurveyService;
 import com.example.surveys.service.SurveyService;
 import com.example.surveys.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,48 +14,62 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @RequestMapping("/survey")
 @Controller
 public class SurveyController {
     private final SurveyService surveyService;
     private final UserService userService;
-    //TODO: потом убрать!
-    private final QuestionRepository questionRepository;
+    private final CompletedSurveyService completedSurveyService;
     @Autowired
-    public SurveyController(SurveyService surveyService, UserService userService, QuestionRepository questionRepository) {
+    public SurveyController(SurveyService surveyService,
+                            UserService userService,
+                            CompletedSurveyService completedSurveyService) {
         this.surveyService = surveyService;
         this.userService = userService;
-        this.questionRepository = questionRepository;
+        this.completedSurveyService = completedSurveyService;
     }
     @GetMapping
     public String test(){
-        Question question = questionRepository.findById(5L).get();
-        System.out.println(question.getDescription());
+
         return "survey";
     }
 
-    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/start/{id}")
     public String getSurvey(
             @CurrentSecurityContext(expression = "authentication") Authentication auth,
             Model model,
             @PathVariable String id) {
-        //TODO: сделать отображение опроса.
-        //TODO: Сначала идет запрос на /id, там создается completedSurvey с uuid, redirect:/uuid
-        return "redirect:/survey/" + uuid;
+        return "redirect:/survey/start/" + id + "/" + completedSurveyService.newSurvey(id, auth.getName());
     }
 
-    @GetMapping("/uuid")
+    @GetMapping("/{id}/error/")
+    public String errorSurvey(
+            @CurrentSecurityContext(expression = "authentication") Authentication auth,
+            Model model
+    ) {
+        model.addAttribute("error", true);
+        return "survey";
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/start/{id}/{uuid}")
     public String startSurvey(
             @CurrentSecurityContext(expression = "authentication") Authentication auth,
             Model model,
-            @PathVariable String uuid
+            @PathVariable String uuid,
+            @PathVariable String id
     ) {
+        SurveyDTO surveyDTO = surveyService.getSurveyDtoById(Long.valueOf(id));
+        model.addAttribute("survey", surveyDTO);
         return "survey";
     }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping
+
 
     @PreAuthorize("hasRole('ROLE_BUSINESS')")
     @GetMapping("/create")

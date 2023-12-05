@@ -15,7 +15,7 @@ public class CompletedSurvey {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String uuid; //id of completed survey unit
-    private Integer status; //статус
+    private Integer status; //статус -1 - не начат, 0 - начат, 1 - завершен
 
     @OneToMany(mappedBy = "completedSurvey")
     private Collection<Answer> answers = new ArrayList<>();
