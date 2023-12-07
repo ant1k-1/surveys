@@ -28,7 +28,7 @@
                 </li>
                 <li class="list-group-item">
                     <button type="button" class="btn btn-primary mx-1">Один из нескольких</button>
-                    Добавляет вопрос с одним вариантом ответа из списка - ратио
+                    Добавляет вопрос с одним вариантом ответа из списка - радио
                 </li>
                 <li class="list-group-item">
                     <button type="button" class="btn btn-primary mx-1">Дата</button>
@@ -122,7 +122,7 @@
 
         const inputHelper = document.createElement('p');
         inputHelper.setAttribute('class', 'card-text mt-3 mx-1');
-        inputHelper.innerText = 'Добавьте варианты ответа (checkbox - несколько ответов) к вашему вопросу'
+        inputHelper.innerText = 'Добавьте варианты ответа (checkbox - несколько ответов) к вашему вопросу. Не используйте сочетание символов \"@@@\"!'
         addCheckBoxDiv.appendChild(inputHelper);
 
         const btnAddCheckbox = document.createElement('button');
@@ -201,7 +201,7 @@
 
         const inputHelper = document.createElement('p');
         inputHelper.setAttribute('class', 'card-text mt-3 mx-1');
-        inputHelper.innerText = 'Добавьте варианты ответа (ratio - один ответ) к вашему вопросу'
+        inputHelper.innerText = 'Добавьте варианты ответа (radio - один ответ) к вашему вопросу'
         addRatioDiv.appendChild(inputHelper);
 
         const btnAddRatio = document.createElement('button');

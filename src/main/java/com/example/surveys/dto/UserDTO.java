@@ -22,5 +22,8 @@ public record UserDTO(
         Boolean isActiveStatus,
         Map<String, Integer> quiz
 ) {
+    public boolean isAdmin() {
+        return roles.contains(Role.ROLE_ADMIN);
+    }
     // Конструкторы и другие методы не требуют явного определения, они автоматически создаются
 }

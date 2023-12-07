@@ -8,9 +8,16 @@
 </head>
 <body>
 <div th:insert="~{parts/navbar :: navbar-copy}"></div>
-<div class="container mx-auto p-2">
-    <p class="my-5">403 доступ запрещен</p>
-    <a class="nav-link btn btn-sm btn-outline-light" aria-current="page" href="/home">Главная</a>
+<div style="
+            height: 100vh; /* Высота контейнера будет занимать всю высоту видимой области */
+            display: flex;
+            justify-content: center; /* Центрирование по горизонтали */
+            align-items: center; /* Центрирование по вертикали */
+" class="container mx-auto p-2">
+    <div class="d-flex flex-column align-items-center text-center">
+        <p class="my-5 fs-1">403 доступ запрещен</p>
+        <a class="btn btn-primary fs-1" aria-current="page" href="/home">Главная</a>
+    </div>
 </div>
 
 <!-- Optional JavaScript -->

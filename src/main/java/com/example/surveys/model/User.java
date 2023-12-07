@@ -43,6 +43,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Collection<CompletedSurvey> completedSurveys = new ArrayList<>();
     // string - uuid, int - award
+
+    public void addQuiz(String uuid, int award) {
+        quiz.put(uuid, award);
+    }
     public User(
             String email,
             String login,

@@ -12,10 +12,10 @@
 <div th:insert="~{parts/navbar :: navbar-copy}"></div>
 
 <div class="container mt-5 p-2">
-<!--    Приветствие-->
+    <!--    Приветствие-->
     <div th:insert="~{parts/balance :: welcome-balance-line}"></div>
-<!--    Вывод денег-->
-    <div sec:authorize="hasAuthority('ROLE_USER')">
+    <!--    Вывод денег-->
+    <div sec:authorize="hasAuthority('ROLE_USER') and !hasAuthority('ROLE_ADMIN')">
         <div class="collapse my-3" id="collapseWithdraw">
             <div class="card card-body">
                 <form th:action="@{/profile/withdraw}" th:method="POST" th:object="${withdraw}">
@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <div sec:authorize="hasAuthority('ROLE_BUSINESS')">
+    <div sec:authorize="hasAuthority('ROLE_BUSINESS') and !hasAuthority('ROLE_ADMIN')">
         <div class="collapse my-3" id="collapseWithdraw">
             <div class="card card-body">
                 <form th:action="@{/profile/deposit}" th:method="POST">
@@ -67,54 +67,74 @@
         </div>
     </div>
 
-<!--    Информация о юзере-->
+    <!--    Информация о юзере-->
     <div class="card card-body mt-3">
-        <h5 class="card-title">Информация о пользователе</h5>
-        <form th:action="@{/profile/edit}" th:method="POST">
-            <div class="mb-3">
-                <label for="id" class="form-label">ID</label>
-                <input autocomplete="off" name="id" type="text" class="form-control" id="id" th:value="${user.id()}" required readonly>
-            </div>
-            <div class="mb-3">
-                <label for="login" class="form-label">Логин</label>
-                <input autocomplete="off" name="login" type="text" class="form-control" id="login" th:value="${user.login()}" required readonly>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Почта</label>
-                <input autocomplete="off" name="email" type="email" class="form-control" id="email" th:value="${user.email()}" required readonly>
-            </div>
-            <div class="mb-3">
-                <label for="name" class="form-label">Имя</label>
-                <input autocomplete="off" name="name" type="text" class="form-control" id="name" th:value="${user.name()}" required readonly>
-            </div>
-            <div class="mb-3">
-                <label for="surname" class="form-label">Фамилия</label>
-                <input autocomplete="off" name="surname" type="text" class="form-control" id="surname" th:value="${user.surname()}" required readonly>
-            </div>
-            <div class="mb-3">
-                <label for="patronymic" class="form-label">Отчество</label>
-                <input autocomplete="off" name="patronymic" type="text" class="form-control" id="patronymic" th:value="${user.patronymic()}" required readonly>
-            </div>
-            <div class="mb-3">
-                <label for="phone" class="form-label">Телефон</label>
-                <input autocomplete="off" name="phone" type="tel" class="form-control" id="phone" th:value="${user.phone()}" required readonly>
-            </div>
-            <div class="mb-3">
-                <label for="birthday" class="form-label">Дата рождения</label>
-                <input autocomplete="off" name="birthday" type="date" class="form-control" id="birthday" th:value="${user.birthday()}" required readonly>
-            </div>
-            <button id="editBtn" type="button" class="btn btn-primary btn-block mb-1">
-                Изменить
+        <div class="d-flex justify-content-between">
+            <h5 class="card-title">Информация о пользователе</h5>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfo" aria-expanded="false" aria-controls="collapseExample">
+                Подробности
             </button>
-            <button id="saveBtn" type="submit" class="btn btn-primary btn-block mb-1" disabled>
-                Сохранить
-            </button>
-        </form>
+        </div>
+        <div class="collapse" id="collapseInfo">
+            <form th:action="${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? @{/admin/users/{userId}/edit(userId=${user.id()})} : @{/profile/edit}" th:method="POST">
+                <div class="mb-3">
+                    <label for="id" class="form-label">ID</label>
+                    <input autocomplete="off" name="id" type="text" class="form-control" id="id" th:value="${user.id()}" required readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="login" class="form-label">Логин</label>
+                    <input autocomplete="off" name="login" type="text" class="form-control" id="login" th:value="${user.login()}" required readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Почта</label>
+                    <input autocomplete="off" name="email" type="email" class="form-control" id="email" th:value="${user.email()}" required
+                           th:attr="readonly=${not #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Имя</label>
+                    <input autocomplete="off" name="name" type="text" class="form-control" id="name" th:value="${user.name()}" required
+                           th:attr="readonly=${not #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                </div>
+                <div class="mb-3">
+                    <label for="surname" class="form-label">Фамилия</label>
+                    <input autocomplete="off" name="surname" type="text" class="form-control" id="surname" th:value="${user.surname()}" required
+                           th:attr="readonly=${not #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                </div>
+                <div class="mb-3">
+                    <label for="patronymic" class="form-label">Отчество</label>
+                    <input autocomplete="off" name="patronymic" type="text" class="form-control" id="patronymic" th:value="${user.patronymic()}" required
+                           th:attr="readonly=${not #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Телефон</label>
+                    <input autocomplete="off" name="phone" type="tel" class="form-control" id="phone" th:value="${user.phone()}" required
+                           th:attr="readonly=${not #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                </div>
+                <div class="mb-3">
+                    <label for="birthday" class="form-label">Дата рождения</label>
+                    <input autocomplete="off" name="birthday" type="date" class="form-control" id="birthday" th:value="${user.birthday()}" required
+                           th:attr="readonly=${not #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                </div>
+                <div sec:authorize="hasAuthority('ROLE_ADMIN')" class="mb-3">
+                    <label for="balance" class="form-label">Баланс</label>
+                    <input autocomplete="off" name="balance" type="number" class="form-control" id="balance" th:value="${user.balance()}" required
+                           th:attr="readonly=${not #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                </div>
+                <button sec:authorize="!hasAuthority('ROLE_ADMIN')" id="editBtn" type="button" class="btn btn-primary btn-block mb-1">
+                    Изменить
+                </button>
+                <button id="saveBtn" type="submit" class="btn btn-primary btn-block mb-1" th:attr="disabled=${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? false : true" disabled>
+                    Сохранить
+                </button>
+            </form>
+        </div>
+
     </div>
-<!--    Смена пароля -->
+    <!--    Смена пароля -->
     <div class="card card-body mt-3">
-        <form th:action="@{/profile/password}" th:method="POST">
-            <div class="d-flex">
+        <h5 class="card-title">Смена пароля</h5>
+        <form th:action="${#authorization.expression('hasRole(''ROLE_ADMIN'')')} ? @{/admin/users/{userId}/password(userId=${user.id()})} : @{/profile/password}" th:method="POST">
+            <div sec:authorize="!hasAuthority('ROLE_ADMIN')" class="d-flex">
                 <div class="mb-3 me-3 flex-fill">
                     <label for="oldPassword" class="form-label">Старый пароль</label>
                     <input autocomplete="off" name="oldPassword" type="password" class="form-control" id="oldPassword"  required>
@@ -124,33 +144,70 @@
                     <input autocomplete="off" name="newPassword" type="password" class="form-control" id="newPassword" required>
                 </div>
             </div>
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')" class="d-flex">
+                <div class="mb-3 me-3 flex-fill">
+                    <label for="newPassword" class="form-label">Новый пароль</label>
+                    <input autocomplete="off" name="newPassword" type="text" class="form-control" id="newPassword">
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary btn-block mb-1">
                 Изменить
             </button>
         </form>
+
+
     </div>
 
     <!--    История операций/опросов-->
     <div sec:authorize="hasAuthority('ROLE_USER')">
         <div class="card card-body mt-3">
-            <div class="card-header">
-                История опросов
+            <div class="card-header d-flex justify-content-between">
+                <h5>История опросов</h5>
+                <h5>Вознаграждение</h5>
             </div>
             <ul class="list-group list-group-flush" th:if="${user.quiz().isEmpty()}">
                 <li class="list-group-item">Пока ничего нет</li>
             </ul>
             <ul class="list-group list-group-flush" th:unless="${user.quiz().isEmpty()}">
-                <li class="list-group-item" th:each="entry : ${user.quiz()}">
-                    <span th:text="${entry.key}"></span> <!-- Вывод строки String -->
-                    <span class="float-right" th:text="${entry.value}"></span> <!-- Вывод числа Integer справа -->
-                </li>
+                <div th:each="entry : ${user.quiz()}">
+                    <li class="list-group-item list-group-item-action d-flex justify-content-between">
+                        <span th:text="${entry.key}"></span> <!-- Вывод строки String -->
+                        <span class="" th:text="${entry.value}"></span> <!-- Вывод числа Integer справа -->
+                    </li>
+                </div>
             </ul>
         </div>
     </div>
 
     <!--    Список созданных опросов-->
     <div sec:authorize="hasAuthority('ROLE_BUSINESS')">
-
+        <div th:if="${business_surveys != null}">
+            <div class="card card-body mt-3">
+                <div class="card-header d-flex justify-content-between">
+                    <h5>История созданных опросов</h5>
+                    <h5 style="margin-right: 28rem">Пройдено/Всего</h5>
+                    <h5>Действия</h5>
+                </div>
+                <ul class="list-group list-group-flush" th:if="${business_surveys.isEmpty()}">
+                    <li class="list-group-item">Пока ничего нет</li>
+                </ul>
+                <ul class="list-group list-group-flush" th:unless="${business_surveys.isEmpty()}">
+                    <div th:each="entry : ${business_surveys}">
+                        <li class="list-group-item list-group-item-action d-flex justify-content-between">
+                            <span th:text="'ID: '+ ${entry.getId()}"></span>
+                            <span th:text="${entry.getCount()} + '/' + ${entry.getAmount()}"></span>
+                            <div>
+                                <a th:href="@{'/survey/view/id/' + ${entry.getId()}}" class="btn btn-primary ms-auto">Посмотреть</a>
+                                <a th:href="@{'/survey/export/' + ${entry.getId()}}" class="btn btn-success ms-auto">Экcпорт</a>
+                                <a th:if="${#strings.equals(entry.getSurveyStatus().name(), 'CLOSED')}" th:href="@{'/survey/close/' + ${entry.getId()}}" class="btn btn-info ms-auto">Открыть</a>
+                                <a th:if="${#strings.equals(entry.getSurveyStatus().name(), 'IN_PROCESS')}" th:href="@{'/survey/close/' + ${entry.getId()}}" class="btn btn-warning ms-auto">Закрыть</a>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -163,7 +220,6 @@
 <script>
     $(document).ready(function () {
         $('#editBtn').click(function () {
-            console.log("ХУЙ");
             var readOnly = $('#email').prop('readonly');
 
             if (readOnly) {

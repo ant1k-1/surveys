@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <title>Sign-up</title>
+    <title>Survey</title>
     <style>
         /* Дополнительные стили для изображений */
         .card {
@@ -24,51 +24,67 @@
     <div sec:authorize="isAuthenticated()" class="">
         <div sec:authorize="hasRole('ROLE_BUSINESS')">
             <div th:if="${survey != null}">
-                <div class="card card-body mb-3 mt-3">
-                    <h4 class="card-title mb-3" th:text="'Опрос №' + ${survey.id()}"></h4>
-                    <div style="background-color: #eefcff" class="card card-body mt-2 mb-3 mx-4 px-5 pt-3" th:each="question, iter : ${survey.questions()}">
-                        <h5 class="card-title mb-3" th:text="'Вопрос ' + ${iter.count}"></h5>
-                        <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
-                            <!-- Итерация по массиву изображений -->
-                            <div th:each="obj, iterStat : ${question.images()}" class="col">
-                                <div class="card h-100 position-relative">
-                                    <!-- Пути к изображениям должны быть указаны в модели данных -->
-                                    <img th:src="'/img/'+${obj}" class="card-img-top" alt="Image">
-                                    <div class="d-flex card align-items-center justify-content-center position-absolute top-0 start-0 bg-primary text-white circle p-2" style="width: 2rem; height: 2rem">
-                                        <span style="" th:text="${iterStat.count}" class="fw-bold"></span>
+                <div th:switch="${SURVEY_STATUS.name()}">
+                    <div th:case="'ERROR'">
+                        <div class="card card-body mb-3 mt-3">
+                            Упс, что-то пошло не так.
+                        </div>
+                    </div>
+                    <div th:case="'NOT_FOUND'">
+                        <div class="card card-body mb-3 mt-3">
+                            Упс, что-то пошло не так. Похоже, опрос не найден.
+                        </div>
+                    </div>
+                    <div th:case="'ACCESS_DENIED'">
+                        <div class="card card-body mb-3 mt-3">
+                            Упс, что-то пошло не так. Похоже, у вас нет доступа к этому опросу.
+                        </div>
+                    </div>
+                    <div th:case="'READ_ONLY'" class="card card-body mb-3 mt-3">
+                        <h4 class="card-title mb-3" th:text="'Опрос №' + ${survey.id()}"></h4>
+                        <div style="background-color: #eefcff" class="card card-body mt-2 mb-3 mx-4 px-5 pt-3" th:each="question, iter : ${survey.questions()}">
+                            <h5 class="card-title mb-3" th:text="'Вопрос ' + ${iter.count}"></h5>
+                            <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
+                                <!-- Итерация по массиву изображений -->
+                                <div th:each="obj, iterStat : ${question.images()}" class="col">
+                                    <div class="card h-100 position-relative">
+                                        <!-- Пути к изображениям должны быть указаны в модели данных -->
+                                        <img th:src="'/img/'+${obj}" class="card-img-top" alt="Image">
+                                        <div class="d-flex card align-items-center justify-content-center position-absolute top-0 start-0 bg-primary text-white circle p-2" style="width: 2rem; height: 2rem">
+                                            <span style="" th:text="${iterStat.count}" class="fw-bold"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <p class="card-text mt-3 mx-1" th:text="${question.description()}"></p>
-                        <div th:if="${question.answerType().toString().equals('TEXT_ANSWER')}">
-                            <textarea class="form-control mt-3" rows="4"></textarea>
-                        </div>
-                        <div th:if="${question.answerType().toString().equals('NUMERIC_ANSWER')}">
-                            <input type="number" class="form-control mt-3">
-                        </div>
-                        <div th:if="${question.answerType().toString().equals('DATE_ANSWER')}">
-                            <input type="date" class="form-control mt-3">
-                        </div>
-                        <div th:if="${question.answerType().toString().equals('CHECKBOX_ANSWER')}">
-                            <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
-                                <div th:each="obj, iterStat : ${question.variants()}" class="col">
-                                    <div class="form-check mx-3">
-                                        <input class="form-check-input" type="checkbox" value="" th:id="${iter.count + 'checkbox' + iterStat.count}">
-                                        <label th:text="${obj}" class="form-check-label" th:for="${iter.count +'checkbox' + iterStat.count}">
-                                        </label>
+                            <p class="card-text mt-3 mx-1" th:text="${question.description()}"></p>
+                            <div th:if="${question.answerType().toString().equals('TEXT_ANSWER')}">
+                                <textarea th:name="'q'+${iter.count} + '-text'" class="form-control mt-3" rows="4"></textarea>
+                            </div>
+                            <div th:if="${question.answerType().toString().equals('NUMERIC_ANSWER')}">
+                                <input th:name="'q'+${iter.count} + '-numeric'" type="number" class="form-control mt-3">
+                            </div>
+                            <div th:if="${question.answerType().toString().equals('DATE_ANSWER')}">
+                                <input th:name="'q'+${iter.count} + '-date'" type="date" class="form-control mt-3">
+                            </div>
+                            <div th:if="${question.answerType().toString().equals('CHECKBOX_ANSWER')}">
+                                <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
+                                    <div th:each="obj, iterStat : ${question.variants()}" class="col">
+                                        <div class="form-check mx-3">
+                                            <input th:name="'q'+${iter.count} + '-checkbox' + ${iterStat.count}" class="form-check-input" type="checkbox" value="" th:id="${iter.count + 'checkbox' + iterStat.count}">
+                                            <label th:text="${obj}" class="form-check-label" th:for="${iter.count +'checkbox' + iterStat.count}">
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-                        </div>
-                        <div th:if="${question.answerType().toString().equals('RATIO_ANSWER')}">
-                            <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
-                                <div th:each="obj, iterStat : ${question.variants()}" class="col">
-                                    <div class="form-check mx-3">
-                                        <input class="form-check-input" type="radio" value="" th:id="${iter.count +'ratio' + iterStat.count}" th:name="${'ratio' + iter.count}">
-                                        <label th:text="${obj}" class="form-check-label" th:for="${iter.count +'ratio' + iterStat.count}">
-                                        </label>
+                            <div th:if="${question.answerType().toString().equals('RATIO_ANSWER')}">
+                                <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
+                                    <div th:each="obj, iterStat : ${question.variants()}" class="col">
+                                        <div class="form-check mx-3">
+                                            <input th:name="'q'+${iter.count} + '-ratio'" class="form-check-input" type="radio" value="" th:id="${iter.count +'ratio' + iterStat.count}">
+                                            <label th:text="${obj}" class="form-check-label" th:for="${iter.count +'ratio' + iterStat.count}">
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -83,6 +99,124 @@
 
         <div sec:authorize="hasRole('ROLE_USER')">
 
+            <div th:if="${survey != null}">
+                <div th:switch="${SURVEY_STATUS.name()}">
+                    <div th:case="'STARTED'">
+                        <form th:action="@{'/survey/start/' + ${survey.id} + '/' + ${uuid}}" th:method="POST" onsubmit="return validateForm();">
+                            <div class="card card-body mb-3 mt-3">
+                                <h4 class="card-title mb-3" th:text="'Опрос №' + ${survey.id()}"></h4>
+                                <div style="background-color: #eefcff" class="card card-body mt-2 mb-3 mx-4 px-5 pt-3" th:each="question, iter : ${survey.questions()}">
+                                    <div th:id="'question-' + ${iter.count} + '-' + ${question.answerType()}">
+                                        <h5 class="card-title mb-3" th:text="'Вопрос ' + ${iter.count}"></h5>
+                                        <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
+                                            <!-- Итерация по массиву изображений -->
+                                            <div th:each="obj, iterStat : ${question.images()}" class="col">
+                                                <div class="card h-100 position-relative">
+                                                    <!-- Пути к изображениям должны быть указаны в модели данных -->
+                                                    <img th:src="'/img/'+${obj}" class="card-img-top" alt="Image">
+                                                    <div class="d-flex card align-items-center justify-content-center position-absolute top-0 start-0 bg-primary text-white circle p-2" style="width: 2rem; height: 2rem">
+                                                        <span style="" th:text="${iterStat.count}" class="fw-bold"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="card-text mt-3 mx-1" th:text="${question.description()}"></p>
+                                        <div th:if="${question.answerType().toString().equals('TEXT_ANSWER')}">
+                                            <textarea th:name="'q'+${iter.count} + '-text'" class="form-control" rows="4" required></textarea>
+                                        </div>
+                                        <div th:if="${question.answerType().toString().equals('NUMERIC_ANSWER')}">
+                                            <input th:name="'q'+${iter.count} + '-numeric'" type="number" class="form-control" required>
+                                        </div>
+                                        <div th:if="${question.answerType().toString().equals('DATE_ANSWER')}">
+                                            <input th:name="'q'+${iter.count} + '-date'" type="date" class="form-control" required>
+                                        </div>
+                                        <div th:if="${question.answerType().toString().equals('CHECKBOX_ANSWER')}">
+                                            <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
+                                                <div th:each="obj, iterStat : ${question.variants()}" class="col">
+                                                    <div class="form-check mx-3">
+                                                        <input th:name="'q'+${iter.count} + '-checkbox' + ${iterStat.index}" class="form-check-input" type="checkbox" th:value="${obj}" th:id="${iter.count + 'checkbox' + iterStat.count}">
+                                                        <label th:text="${obj}" class="form-check-label" th:for="${iter.count +'checkbox' + iterStat.count}">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div th:if="${question.answerType().toString().equals('RATIO_ANSWER')}">
+                                            <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
+                                                <div th:each="obj, iterStat : ${question.variants()}" class="col">
+                                                    <div class="form-check mx-3">
+                                                        <input th:name="'q'+${iter.count} + '-ratio'" class="form-check-input" type="radio" th:value="${obj}" th:id="${iter.count +'ratio' + iterStat.count}" required>
+                                                        <label th:text="${obj}" class="form-check-label" th:for="${iter.count +'ratio' + iterStat.count}">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="finish-survey-btn" type="submit" class="btn btn-primary mx-1">Отправить</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div th:case="'ACCESS_DENIED'">
+                        <div class="card card-body mb-3 mt-3">
+                            Упс, что-то пошло не так. Похоже, у вас нет доступа к этому опросу.
+                        </div>
+                    </div>
+                    <div th:case="'FINISHED'">
+                        <div class="card card-body mb-3 mt-3">
+                            Спасибо за прохождение данного опроса. Вознаграждение зачислено на ваш счёт.
+                        </div>
+                    </div>
+                    <div th:case="'NOT_FOUND'">
+                        <div class="card card-body mb-3 mt-3">
+                            Упс, что-то пошло не так. Похоже, опрос не найден.
+                        </div>
+                    </div>
+                    <div th:case="'CLOSED'">
+                        <div class="card card-body mb-3 mt-3">
+                            Упс, что-то пошло не так. Похоже, что данный опрос уже закрыт.
+                        </div>
+                    </div>
+                    <div th:case="'ERROR' or '*'">
+                        <div class="card card-body mb-3 mt-3">
+                            Упс, что-то пошло не так.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div th:if="${survey == null}" class="">
+                <div th:switch="${SURVEY_STATUS.name()}">
+                    <div th:case="'ACCESS_DENIED'">
+                        <div class="card card-body mb-3 mt-3">
+                            Упс, что-то пошло не так. Похоже, у вас нет доступа к этому опросу.
+                        </div>
+                    </div>
+                    <div th:case="'FINISHED'">
+                        <div class="card card-body mb-3 mt-3">
+                            Спасибо за прохождение данного опроса. Вознаграждение зачислено на ваш счёт.
+                        </div>
+                    </div>
+                    <div th:case="'NOT_FOUND'">
+                        <div class="card card-body mb-3 mt-3">
+                            Упс, что-то пошло не так. Похоже, опрос не найден.
+                        </div>
+                    </div>
+                    <div th:case="'CLOSED'">
+                        <div class="card card-body mb-3 mt-3">
+                            Упс, что-то пошло не так. Похоже, что данный опрос уже закрыт.
+                        </div>
+                    </div>
+                    <div th:case="'ERROR' or '*'">
+                        <div class="card card-body mb-3 mt-3">
+                            Упс, что-то пошло не так.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -96,6 +230,24 @@
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script>
+    function validateForm() {
+        const elements = document.querySelectorAll('[id^="question-"][id$="-CHECKBOX_ANSWER"]');
+        let valid = true;
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            const checkboxes = element.querySelectorAll('input[type="checkbox"]:checked');
+
+            if (checkboxes.length === 0) {
+                const questionNumber = element.getAttribute('id').match(/^question-(\d+)-CHECKBOX_ANSWER$/)[1];
+                alert('Пожалуйста, выберите хотя бы один вариант для вопроса №' + questionNumber);
+                valid = false;
+                break; // Выход из цикла при обнаружении ошибки
+            }
+        }
+        return valid;
+    }
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </body>
 </html>

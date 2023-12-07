@@ -27,4 +27,15 @@ public class Answer {
 
     @Lob
     private String answer;
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "id=" + id +
+                ", question=" + question +
+                ", completedSurveyUUID=" + completedSurvey.getUuid() +
+                ", answerType=" + answerType +
+                ", answer='" + answer + '\'' +
+                '}';
+    }
 }

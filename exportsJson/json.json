@@ -1,0 +1,33 @@
+{
+  "id": 5,
+  "businessId": 1,
+  "questions": [
+    {
+      "id": 5,
+      "description": "Выбери картинку с котиком",
+      "answerType": "CHECKBOX_ANSWER",
+      "variants": [
+        "Картинка 1",
+        "Картинка 2"
+      ],
+      "answers": [
+        {
+          "id": 8,
+          "answerType": "CHECKBOX_ANSWER",
+          "delimiter": "@@@",
+          "answer": "q1-checkbox0\u003dКартинка 1@@@q1-checkbox1\u003dКартинка 2"
+        },
+        {
+          "id": 9,
+          "answerType": "CHECKBOX_ANSWER",
+          "delimiter": "@@@",
+          "answer": "q1-checkbox0\u003dКартинка 1"
+        }
+      ]
+    }
+  ],
+  "surveyStatus": "CLOSED",
+  "amount": 2,
+  "count": 2,
+  "award": 20
+}

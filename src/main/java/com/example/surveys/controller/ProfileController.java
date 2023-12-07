@@ -1,8 +1,10 @@
 package com.example.surveys.controller;
 
 import com.example.surveys.dto.WithdrawDTO;
+import com.example.surveys.service.SurveyService;
 import com.example.surveys.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
@@ -15,10 +17,12 @@ import java.util.Map;
 @Controller
 public class ProfileController {
     private final UserService userService;
+    private final SurveyService surveyService;
 
     @Autowired
-    public ProfileController(UserService userService) {
+    public ProfileController(UserService userService, SurveyService surveyService) {
         this.userService = userService;
+        this.surveyService = surveyService;
     }
 
     @GetMapping
@@ -26,9 +30,10 @@ public class ProfileController {
             @CurrentSecurityContext(expression = "authentication") Authentication auth,
             Model model
     ) {
+        model.addAttribute("business_surveys",
+                surveyService.getAllSurveysByBusinessLogin(auth.getName()));
         model.addAttribute("user", userService.getUserDTO(auth.getName()));
         model.addAttribute("withdraw", new WithdrawDTO());
-        //TODO: добавить в модель список пройденных опросов и выводы денег.
         return "profile";
     }
 
@@ -37,7 +42,6 @@ public class ProfileController {
             @CurrentSecurityContext(expression = "authentication") Authentication auth,
             @ModelAttribute("withdraw") WithdrawDTO withdrawCredentials
     ) {
-        //TODO: опционально добавить обработки ошибок и вывод на веб
         userService.withdraw(auth.getName());
         return "redirect:/profile";
     }
@@ -47,7 +51,6 @@ public class ProfileController {
             @CurrentSecurityContext(expression = "authentication") Authentication auth,
             @RequestParam("deposit") String deposit
     ) {
-        //TODO: опционально добавить обработки ошибок и вывод на веб
         userService.deposit(auth.getName(), deposit);
         return "redirect:/profile";
     }
@@ -57,7 +60,6 @@ public class ProfileController {
             @CurrentSecurityContext(expression = "authentication") Authentication auth,
             @RequestParam Map<String, String> userData
     ) {
-        //TODO: опционально добавить обработки ошибок и вывод на веб
         userService.editProfile(auth.getName(), userData);
         return "redirect:/profile";
     }
@@ -66,7 +68,6 @@ public class ProfileController {
             @CurrentSecurityContext(expression = "authentication") Authentication auth,
             @RequestParam Map<String, String> userData
     ) {
-        //TODO: опционально добавить обработки ошибок и вывод на веб
         userService.changePassword(auth.getName(), userData.get("oldPassword"), userData.get("newPassword"));
         return "redirect:/profile";
     }

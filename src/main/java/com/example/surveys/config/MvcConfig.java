@@ -13,6 +13,10 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Value("${surveyicon.path}")
     private String surveyIconPath;
+
+    @Value("${export.path}")
+    private String exportPath;
+
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/sign-in").setViewName("sign-in");
     }

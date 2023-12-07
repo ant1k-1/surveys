@@ -17,18 +17,15 @@
                         <a class="nav-link btn btn-sm btn-outline-light" aria-current="page" href="/home">Главная</a>
                     </div>
                     <div class="navbar-nav">
-                        <div sec:authorize="isAuthenticated()">
-                            <a class="nav-link btn btn-sm btn-outline-light" href="/profile">Профиль</a>
-                        </div>
-                        <div sec:authorize="isAuthenticated()">
-                            <form th:action="@{/logout}" method="post">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                                <input class="btn btn-sm btn-outline-danger nav-link" type="submit" value="Выйти"/>
-                            </form>
-                        </div>
-                        <div sec:authorize="!isAuthenticated()">
-                            <a href="/sign-in" class="btn btn-sm btn-outline-light nav-link" role="button">Войти</a>
-                        </div>
+                        <a sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')" class="nav-link btn btn-sm btn-outline-light" href="/admin/surveys">Опросы</a>
+                        <a sec:authorize="isAuthenticated() and hasRole('ROLE_ADMIN')" class="nav-link btn btn-sm btn-outline-light" href="/admin/users">Пользователи</a>
+                        <a sec:authorize="isAuthenticated() and hasRole('ROLE_BUSINESS')" class="nav-link btn btn-sm btn-outline-light" href="/survey/create">Создать опрос</a>
+                        <a sec:authorize="isAuthenticated()" class="nav-link btn btn-sm btn-outline-light" href="/profile">Профиль</a>
+                        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <input class="btn btn-sm btn-outline-danger nav-link" type="submit" value="Выйти"/>
+                        </form>
+                        <a sec:authorize="!isAuthenticated()" href="/sign-in" class="btn btn-sm btn-outline-light nav-link" role="button">Войти</a>
                     </div>
                 </div>
             </div>

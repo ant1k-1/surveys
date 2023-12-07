@@ -15,9 +15,9 @@ public class CompletedSurvey {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String uuid; //id of completed survey unit
-    private Integer status; //статус -1 - не начат, 0 - начат, 1 - завершен
+    private Integer status; //статус 0 - STARTED, 1 - FINISHED
 
-    @OneToMany(mappedBy = "completedSurvey")
+    @OneToMany(mappedBy = "completedSurvey", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Answer> answers = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,4 +27,15 @@ public class CompletedSurvey {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Override
+    public String toString() {
+        return "CompletedSurvey{" +
+                "uuid='" + uuid + '\'' +
+                ", status=" + status +
+                ", answers=" + answers +
+                ", survey=" + survey.getId() +
+                ", username=" + user.getLogin() +
+                '}';
+    }
 }
