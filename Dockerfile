@@ -8,7 +8,7 @@ RUN gradle build -x test
 # Package stage
 
 FROM openjdk:latest
-ENV JAR_NAME=app.jar
+ENV JAR_NAME=surveys-0.0.1-SNAPSHOT.jar
 ENV APP_HOME=/usr/app/
 WORKDIR $APP_HOME
 COPY --from=BUILD $APP_HOME .
