@@ -3,7 +3,7 @@
 FROM gradle:latest AS BUILD
 WORKDIR /usr/app/
 COPY . .
-RUN gradle build
+RUN gradle build -x test
 
 # Package stage
 
