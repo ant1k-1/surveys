@@ -63,7 +63,7 @@ public class UserService {
         if (userRepository.existsByLogin(user.getLogin())) return false;
         user.setBalance(0);
         user.setCreationDate(LocalDateTime.now());
-        user.setIsActiveStatus(true);
+        user.setIsActiveStatus(false);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;

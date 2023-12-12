@@ -1,33 +1,120 @@
 {
-  "id": 5,
+  "id": 7,
   "businessId": 1,
   "questions": [
     {
-      "id": 5,
-      "description": "Выбери картинку с котиком",
+      "id": 6,
+      "description": "Как вас зовут?",
+      "answerType": "TEXT_ANSWER",
+      "variants": [],
+      "answers": [
+        {
+          "id": 1,
+          "answerType": "TEXT_ANSWER",
+          "delimiter": "@@@",
+          "answer": "Антон"
+        },
+        {
+          "id": 11,
+          "answerType": "TEXT_ANSWER",
+          "delimiter": "@@@",
+          "answer": "Антон"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "description": "Введите вашу дату рождения",
+      "answerType": "DATE_ANSWER",
+      "variants": [],
+      "answers": [
+        {
+          "id": 2,
+          "answerType": "DATE_ANSWER",
+          "delimiter": "@@@",
+          "answer": "2003-02-19"
+        },
+        {
+          "id": 12,
+          "answerType": "DATE_ANSWER",
+          "delimiter": "@@@",
+          "answer": "2003-02-19"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "description": "Сколько кошек у вас сейчас дома?",
+      "answerType": "NUMERIC_ANSWER",
+      "variants": [],
+      "answers": [
+        {
+          "id": 3,
+          "answerType": "NUMERIC_ANSWER",
+          "delimiter": "@@@",
+          "answer": "1"
+        },
+        {
+          "id": 13,
+          "answerType": "NUMERIC_ANSWER",
+          "delimiter": "@@@",
+          "answer": "1"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "description": "Выберите язык, который вы знаете или хотели бы изучать.",
       "answerType": "CHECKBOX_ANSWER",
       "variants": [
-        "Картинка 1",
-        "Картинка 2"
+        "Английский язык",
+        "Китайский язык",
+        "Немецкий язык",
+        "Французский язык"
       ],
       "answers": [
         {
-          "id": 8,
+          "id": 4,
           "answerType": "CHECKBOX_ANSWER",
           "delimiter": "@@@",
-          "answer": "q1-checkbox0\u003dКартинка 1@@@q1-checkbox1\u003dКартинка 2"
+          "answer": "q4-checkbox0\u003dАнглийский язык@@@q4-checkbox3\u003dФранцузский язык"
         },
         {
-          "id": 9,
+          "id": 14,
           "answerType": "CHECKBOX_ANSWER",
           "delimiter": "@@@",
-          "answer": "q1-checkbox0\u003dКартинка 1"
+          "answer": "q4-checkbox0\u003dАнглийский язык"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "description": "Какая порода кошек вам более привлекательна?",
+      "answerType": "RATIO_ANSWER",
+      "variants": [
+        "Сиамская",
+        "Британская",
+        "Мейн кун",
+        "Мне нравится любая"
+      ],
+      "answers": [
+        {
+          "id": 5,
+          "answerType": "RATIO_ANSWER",
+          "delimiter": "@@@",
+          "answer": "Мне нравится любая"
+        },
+        {
+          "id": 15,
+          "answerType": "RATIO_ANSWER",
+          "delimiter": "@@@",
+          "answer": "Мне нравится любая"
         }
       ]
     }
   ],
-  "surveyStatus": "CLOSED",
-  "amount": 2,
+  "surveyStatus": "IN_PROCESS",
+  "amount": 5,
   "count": 2,
   "award": 20
 }
