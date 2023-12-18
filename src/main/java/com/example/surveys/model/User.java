@@ -40,7 +40,7 @@ public class User {
     @CollectionTable(name = "user_quiz", joinColumns = @JoinColumn(name = "user_id"))
     private Map<String, Integer> quiz = new HashMap<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<CompletedSurvey> completedSurveys = new ArrayList<>();
     // string - uuid, int - award
 

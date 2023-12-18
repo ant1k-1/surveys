@@ -22,7 +22,7 @@
                         <a th:href="@{'/admin/users/' + ${user.getId()}}" class="btn btn-primary ms-auto">Подробнее</a>
                         <a th:if="${user.getIsActiveStatus() and !user.isAdmin()}" th:href="@{'/admin/users/' + ${user.getId()} + '/ban'}" class="btn btn-danger ms-auto">Заблокировать</a>
                         <a th:if="${!user.getIsActiveStatus() and !user.isAdmin()}" th:href="@{'/admin/users/' + ${user.getId()} + '/ban'}" class="btn btn-success ms-auto">Разблокировать</a>
-                        <a th:if="${!user.isAdmin()}" th:href="@{'/admin/users/' + ${user.getId()}}" class="btn btn-danger ms-auto">Удалить</a>
+                        <a th:if="${!user.isAdmin()}" th:href="@{'/admin/users/delete/' + ${user.getId()}}" class="btn btn-danger ms-auto">Удалить</a>
                     </div>
                 </div>
             </div>
